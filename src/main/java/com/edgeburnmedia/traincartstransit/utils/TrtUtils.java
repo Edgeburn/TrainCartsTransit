@@ -1,0 +1,130 @@
+package com.edgeburnmedia.traincartstransit.utils;
+
+import com.bergerkiller.bukkit.tc.controller.MinecartGroup;
+import com.bergerkiller.bukkit.tc.controller.MinecartMember;
+import com.bergerkiller.bukkit.tc.controller.MinecartMemberStore;
+import com.bergerkiller.bukkit.tc.events.SignActionEvent;
+import com.edgeburnmedia.traincartstransit.TrainCartsTransit;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.UUID;
+import java.util.function.Consumer;
+
+public final class TrtUtils {
+
+	public static void ringBellOfPlayerTrain(TrainCartsTransit plugin, Player player) {
+		Entity vehicle = player.getVehicle();
+		MinecartMember<?> member = MinecartMemberStore.getFromEntity(vehicle);
+		MinecartGroup train = member.getGroup();
+		train.getProperties().set(plugin.getBellRungTrainProperty(), true);
+		String nextStopDisplayName = TrtUtils.getNextStopDisplayName(plugin, train);
+		player.sendTitle(ChatColor.GOLD + "STOP REQUESTED", ChatColor.GOLD + "Stopping at " + nextStopDisplayName, 20, 70, 20);
+		plugin.getTransitTonesPlayer().playBellRungTone(player);
+	}
+
+	/**
+	 * Checks whether players exist within a certain radius of a {@link Location}
+	 *
+	 * @param location Location to check
+	 * @param range    Radius to check
+	 * @return True if players exist, False if not
+	 */
+	public static boolean arePlayersInRange(Location location, double range, Player... ignored) {
+		Collection<Entity> nearbyEntities;
+		List<UUID> ignoredPlayerUUIDS = new ArrayList<>();
+		for (int i = 0; i < ignored.length; i++) {
+			ignoredPlayerUUIDS.add(ignored[i].getUniqueId());
+		}
+		try {
+			nearbyEntities = location.getWorld().getNearbyEntities(location, range, range, range);
+		} catch (NullPointerException e) {
+			return false;
+		}
+		if (nearbyEntities.isEmpty()) {
+			return false;
+		}
+		for (Entity entity : nearbyEntities) {
+			if (entity instanceof Player) {
+				if (!doesListContain(ignoredPlayerUUIDS, entity.getUniqueId())) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	public static <T> boolean doesListContain(List<T> list, T check) {
+		for (T c : list) {
+			if (list.contains(c)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Checks whether players exist within a certain radius of a {@link Block}'s {@link Location}
+	 *
+	 * @param block Location to check
+	 * @param range Radius to check
+	 * @return True if players exist, False if not
+	 */
+	public static boolean arePlayersInRange(Block block, double range, Player... ignored) {
+		return arePlayersInRange(block.getLocation(), range, ignored);
+	}
+
+	public static void runOnAllPassengers(SignActionEvent e, Consumer<Player> f) {
+		e.getGroup().forEach(minecartMember -> {
+			minecartMember.getEntity().getPlayerPassengers().forEach(player -> {
+				f.accept(player);
+			});
+		});
+	}
+
+	public static String getNextStopDisplayName(TrainCartsTransit pl, MinecartGroup train) {
+		String destID = train.getProperties().getDestination();
+		String stopDisplay = "Unknown";
+		if (destID.isBlank()) { // if this is blank, the train may not have a route, but just a destination
+			destID = train.getProperties().getDestination();
+			if (destID == null) { // may still not have a destination, in which case set it to "Unknown"
+				destID = "Unknown";
+			} else if (destID.isBlank()) {
+				destID = "Unknown";
+			}
+		}
+
+		if (!destID.equalsIgnoreCase("Unknown")) {
+			return pl.getStopInfoManager().getDisplayName(destID);
+		} else {
+			return "Unknown";
+		}
+	}
+
+	public static String getNextStopSound(TrainCartsTransit pl, MinecartGroup train) {
+		String destID = train.getProperties().getDestination();
+		String sound = null;
+		if (destID.isBlank()) { // if this is blank, the train may not have a route, but just a destination
+			destID = train.getProperties().getDestination();
+			if (destID == null) { // may still not have a destination, in which case return null
+				return null;
+			} else if (destID.isBlank()) {
+				return null;
+			}
+		}
+
+		if (!destID.equalsIgnoreCase("Unknown")) {
+			return pl.getStopInfoManager().getSound(destID);
+		} else {
+			return null;
+		}
+	}
+
+
+}

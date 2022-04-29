@@ -1,0 +1,14 @@
+name: TrainCartsTransit
+version: '${project.version}'
+main: com.edgeburnmedia.traincartstransit.TrainCartsTransit
+api-version: 1.18
+depend: [ BKCommonLib, Train_Carts ]
+commands:
+  traincartstransit:
+    description: "TrainCartsTransit commands"
+    usage: "/trt"
+    aliases:
+      - trt
+  trtdebug:
+    description: "Debugging commands for TrainCartsTransit"
+    usage: "/trtdebug"
