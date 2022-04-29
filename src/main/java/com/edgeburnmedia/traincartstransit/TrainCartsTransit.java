@@ -1,10 +1,5 @@
 package com.edgeburnmedia.traincartstransit;
 
-import cloud.commandframework.CommandManager;
-import cloud.commandframework.annotations.AnnotationParser;
-import cloud.commandframework.bukkit.BukkitCommandManager;
-import cloud.commandframework.execution.CommandExecutionCoordinator;
-import cloud.commandframework.meta.SimpleCommandMeta;
 import com.bergerkiller.bukkit.tc.TrainCarts;
 import com.bergerkiller.bukkit.tc.signactions.SignAction;
 import com.edgeburnmedia.traincartstransit.managers.StopInfoManager;
@@ -14,10 +9,7 @@ import com.edgeburnmedia.traincartstransit.passengerinformationdisplay.TransitTo
 import com.edgeburnmedia.traincartstransit.properties.BellRung;
 import com.edgeburnmedia.traincartstransit.properties.RouteID;
 import com.edgeburnmedia.traincartstransit.stop.SignActionStop;
-import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.util.function.Function;
 
 public final class TrainCartsTransit extends JavaPlugin {
 	private final SignActionStop signActionStop = new SignActionStop(this);
@@ -75,15 +67,5 @@ public final class TrainCartsTransit extends JavaPlugin {
 
 	public RouteID getRouteID() {
 		return routeID;
-	}
-
-	private void setUpCloudCommands() throws Exception {
-		CommandManager<CommandSender> commandManager;
-		AnnotationParser<CommandSender> parser;
-		commandManager = new BukkitCommandManager<>(this, CommandExecutionCoordinator.simpleCoordinator(), Function.identity(), Function.identity());
-		parser = new AnnotationParser<>(commandManager, CommandSender.class, parserParameters -> SimpleCommandMeta.empty());
-		parser.parse(routeID).forEach(commandSenderCommand -> {
-			commandManager.getCommandRegistrationHandler().registerCommand(commandSenderCommand);
-		});
 	}
 }

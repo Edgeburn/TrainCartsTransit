@@ -51,11 +51,6 @@
                             <shadedPattern>com.edgeburnmedia.traincartstransit.shaded.cloud
                             </shadedPattern>
                         </relocation>
-                        <relocation>
-                            <pattern>com.google</pattern>
-                            <shadedPattern>com.edgeburnmedia.traincartstransit.shaded.google
-                            </shadedPattern>
-                        </relocation>
                     </relocations>
                 </configuration>
             </plugin>
@@ -101,26 +96,6 @@
             <artifactId>TrainCarts</artifactId>
             <version>${project.tcversion}</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>cloud.commandframework</groupId>
-            <artifactId>cloud-core</artifactId>
-            <version>1.6.2</version>
-        </dependency>
-        <dependency>
-            <groupId>cloud.commandframework</groupId>
-            <artifactId>cloud-bukkit</artifactId>
-            <version>1.6.2</version>
-        </dependency>
-        <dependency>
-            <groupId>cloud.commandframework</groupId>
-            <artifactId>cloud-annotations</artifactId>
-            <version>1.6.2</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.inject</groupId>
-            <artifactId>guice</artifactId>
-            <version>5.1.0</version>
         </dependency>
     </dependencies>
 </project>
