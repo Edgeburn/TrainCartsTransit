@@ -25,8 +25,10 @@ public final class TrtUtils {
 		MinecartGroup train = member.getGroup();
 		train.getProperties().set(plugin.getBellRungTrainProperty(), true);
 		String nextStopDisplayName = TrtUtils.getNextStopDisplayName(plugin, train);
-		player.sendTitle(ChatColor.GOLD + "STOP REQUESTED", ChatColor.GOLD + "Stopping at " + nextStopDisplayName, 20, 70, 20);
-		plugin.getTransitTonesPlayer().playBellRungTone(player);
+		TrtUtils.runOnAllPassengers(train, player1 -> {
+			player.sendTitle(ChatColor.GOLD + "STOP REQUESTED", ChatColor.GOLD + "Stopping at " + nextStopDisplayName, 20, 70, 20);
+			plugin.getTransitTonesPlayer().playBellRungTone(player);
+		});
 	}
 
 	/**
@@ -50,14 +52,12 @@ public final class TrtUtils {
 		if (nearbyEntities.isEmpty()) {
 			return false;
 		}
-		for (Entity entity : nearbyEntities) {
-			if (entity instanceof Player) {
-				if (!doesListContain(ignoredPlayerUUIDS, entity.getUniqueId())) {
-					return true;
-				}
-			}
+		nearbyEntities.removeAll(List.of(ignored));
+		if (nearbyEntities.size() > 0) {
+			return true;
+		} else {
+			return false;
 		}
-		return false;
 	}
 
 	public static <T> boolean doesListContain(List<T> list, T check) {
@@ -81,7 +81,11 @@ public final class TrtUtils {
 	}
 
 	public static void runOnAllPassengers(SignActionEvent e, Consumer<Player> f) {
-		e.getGroup().forEach(minecartMember -> {
+		runOnAllPassengers(e.getGroup(), f);
+	}
+
+	public static void runOnAllPassengers(MinecartGroup train, Consumer<Player> f) {
+		train.forEach(minecartMember -> {
 			minecartMember.getEntity().getPlayerPassengers().forEach(player -> {
 				f.accept(player);
 			});
