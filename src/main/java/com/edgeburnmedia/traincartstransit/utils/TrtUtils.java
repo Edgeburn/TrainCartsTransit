@@ -39,6 +39,7 @@ public final class TrtUtils {
 	 * @return True if players exist, False if not
 	 */
 	public static boolean arePlayersInRange(Location location, double range, Player... ignored) {
+		// FIXME: trains will not stop if a player is waiting at a stop if there are players riding the train
 		Collection<Entity> nearbyEntities;
 		List<UUID> ignoredPlayerUUIDS = new ArrayList<>();
 		for (int i = 0; i < ignored.length; i++) {
@@ -52,12 +53,14 @@ public final class TrtUtils {
 		if (nearbyEntities.isEmpty()) {
 			return false;
 		}
-		nearbyEntities.removeAll(List.of(ignored));
-		if (nearbyEntities.size() > 0) {
-			return true;
-		} else {
-			return false;
+		for (Entity entity : nearbyEntities) {
+			if (entity instanceof Player) {
+				if (!doesListContain(ignoredPlayerUUIDS, entity.getUniqueId())) {
+					return true;
+				}
+			}
 		}
+		return false;
 	}
 
 	public static <T> boolean doesListContain(List<T> list, T check) {
