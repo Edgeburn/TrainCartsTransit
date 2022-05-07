@@ -31,7 +31,7 @@ public class NextStopInfoBar extends BukkitRunnable {
 		boolean bellRung = train.getProperties().get(pl.getBellRungTrainProperty());
 
 		if (bellRung) {
-			return ChatColor.BOLD + TICK_MARK;
+			return " " + ChatColor.BOLD + TICK_MARK;
 		} else {
 			return "";
 		}
