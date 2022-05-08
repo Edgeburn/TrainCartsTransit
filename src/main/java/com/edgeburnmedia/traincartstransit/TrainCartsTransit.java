@@ -8,11 +8,13 @@ import com.edgeburnmedia.traincartstransit.passengerinformationdisplay.NextStopI
 import com.edgeburnmedia.traincartstransit.passengerinformationdisplay.TransitTonesPlayer;
 import com.edgeburnmedia.traincartstransit.properties.BellRung;
 import com.edgeburnmedia.traincartstransit.properties.RouteID;
+import com.edgeburnmedia.traincartstransit.properties.SignActionBellRing;
 import com.edgeburnmedia.traincartstransit.stop.SignActionStop;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class TrainCartsTransit extends JavaPlugin {
 	private final SignActionStop signActionStop = new SignActionStop(this);
+	private final SignActionBellRing signActionBellRing = new SignActionBellRing(this);
 	private final TransitTonesPlayer transitTonesPlayer = new TransitTonesPlayer(this);
 	private final TrainRouteAnnouncementManager announcementManager = new TrainRouteAnnouncementManager(this);
 	private RouteID routeID;
@@ -41,6 +43,8 @@ public final class TrainCartsTransit extends JavaPlugin {
 	public void onDisable() {
 		SignAction.unregister(signActionStop);
 		getLogger().info("Unregistered SignActionStop");
+		SignAction.unregister(signActionBellRing);
+		getLogger().info("Unregistered SignActionBellRing");
 	}
 
 	@Override
@@ -48,6 +52,9 @@ public final class TrainCartsTransit extends JavaPlugin {
 		TrtListeners listeners = new TrtListeners(this);
 		getServer().getPluginManager().registerEvents(listeners, this);
 		SignAction.register(signActionStop);
+		getLogger().info("Registered SignActionStop");
+		SignAction.register(signActionBellRing);
+		getLogger().info("Registered SignActionBellRing");
 		routeID = new RouteID(this);
 		bellRungTrainProperty = new BellRung();
 		getPlugin(TrainCarts.class).getPropertyRegistry().register(routeID);
