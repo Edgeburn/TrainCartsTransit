@@ -4,6 +4,7 @@ import com.bergerkiller.bukkit.tc.controller.MinecartGroup;
 import com.bergerkiller.bukkit.tc.controller.MinecartMember;
 import com.bergerkiller.bukkit.tc.controller.MinecartMemberStore;
 import com.bergerkiller.bukkit.tc.events.SignActionEvent;
+import com.bergerkiller.bukkit.tc.properties.TrainProperties;
 import com.edgeburnmedia.traincartstransit.TrainCartsTransit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -93,6 +94,23 @@ public final class TrtUtils {
 				f.accept(player);
 			});
 		});
+	}
+
+	public static String getLastStop(MinecartGroup train) {
+		TrainProperties properties = train.getProperties();
+		List<String> stops = new ArrayList<>(properties.getDestinationRoute());
+		final int lastStopId = stops.size() - 1;
+		return stops.get(lastStopId);
+	}
+
+	public static boolean isLastStop(MinecartGroup train, String stopName) {
+		return getLastStop(train).equals(stopName);
+	}
+
+	public static boolean isNextStopLastStop(MinecartGroup train) {
+		String lastStop = getLastStop(train);
+		String nextStop = train.getProperties().getDestination();
+		return lastStop.equals(nextStop);
 	}
 
 	public static String getNextStopDisplayName(TrainCartsTransit pl, MinecartGroup train) {

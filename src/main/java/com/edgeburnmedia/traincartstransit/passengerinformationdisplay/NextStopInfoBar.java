@@ -37,6 +37,15 @@ public class NextStopInfoBar extends BukkitRunnable {
 		}
 	}
 
+	private String lastStopTextIfLastStop(MinecartGroup train) {
+		final boolean isLastStop = TrtUtils.isNextStopLastStop(train);
+		if (isLastStop) {
+			return " " + ChatColor.RED + ChatColor.BOLD + "LAST STOP";
+		} else {
+			return "";
+		}
+	}
+
 	/**
 	 * When an object implementing interface {@code Runnable} is used
 	 * to create a thread, starting the thread causes the object's
@@ -57,7 +66,7 @@ public class NextStopInfoBar extends BukkitRunnable {
 				MinecartGroup train = member.getGroup();
 				if (train != null) {
 					String stopName = TrtUtils.getNextStopDisplayName(pl, train);
-					player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.GOLD + stopName + checkMarkSymbolIfStopping(train)));
+					player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.GOLD + stopName + checkMarkSymbolIfStopping(train) + ChatColor.RESET + lastStopTextIfLastStop(train)));
 				}
 			}
 		});
