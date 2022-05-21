@@ -99,7 +99,16 @@ public final class TrtUtils {
 	public static String getLastStop(MinecartGroup train) {
 		TrainProperties properties = train.getProperties();
 		List<String> stops = new ArrayList<>(properties.getDestinationRoute());
+		if (stops == null) {
+			return "Unknown";
+		}
+		if (stops.size() < 1) {
+			return "Unknown";
+		}
 		final int lastStopId = stops.size() - 1;
+		if (lastStopId < 0) {
+			return "Unknown";
+		}
 		return stops.get(lastStopId);
 	}
 
@@ -110,6 +119,9 @@ public final class TrtUtils {
 	public static boolean isNextStopLastStop(MinecartGroup train) {
 		String lastStop = getLastStop(train);
 		String nextStop = train.getProperties().getDestination();
+		if (lastStop.equals("Unknown") || nextStop.equals("Unknown")) {
+			return false;
+		}
 		return lastStop.equals(nextStop);
 	}
 
