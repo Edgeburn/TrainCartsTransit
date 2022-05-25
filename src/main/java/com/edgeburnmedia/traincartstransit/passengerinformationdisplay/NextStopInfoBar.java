@@ -11,27 +11,27 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.entity.Entity;
 import org.bukkit.scheduler.BukkitRunnable;
 
-
 public class NextStopInfoBar extends BukkitRunnable {
 	private static final String TICK_MARK = "✓";
 	private final TrainCartsTransit pl;
-
 
 	public NextStopInfoBar(TrainCartsTransit pl) {
 		this.pl = pl;
 	}
 
 	/**
-	 * Returns the check mark symbol if the train is stopping at the next stop. Otherwise, returns an empty string.
+	 * Returns the check mark symbol if the train is stopping at the next stop.
+	 * Otherwise, returns an empty string.
 	 *
 	 * @param train the train to check
-	 * @return the check mark symbol if the train is stopping at the next stop. Otherwise, returns an empty string.
+	 * @return the check mark symbol if the train is stopping at the next stop.
+	 *         Otherwise, returns an empty string.
 	 */
 	private String checkMarkSymbolIfStopping(MinecartGroup train) {
 		boolean bellRung = train.getProperties().get(pl.getBellRungTrainProperty());
 
 		if (bellRung) {
-			return " " + ChatColor.BOLD + TICK_MARK;
+			return " " + ChatColor.GOLD + ChatColor.BOLD + TICK_MARK;
 		} else {
 			return "";
 		}
@@ -66,7 +66,10 @@ public class NextStopInfoBar extends BukkitRunnable {
 				MinecartGroup train = member.getGroup();
 				if (train != null) {
 					String stopName = TrtUtils.getNextStopDisplayName(pl, train);
-					player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.GOLD + stopName + checkMarkSymbolIfStopping(train) + ChatColor.RESET + lastStopTextIfLastStop(train)));
+					player.spigot().sendMessage(ChatMessageType.ACTION_BAR,
+							TextComponent.fromLegacyText(
+									ChatColor.GOLD + stopName + ChatColor.RESET + lastStopTextIfLastStop(train)
+											+ checkMarkSymbolIfStopping(train)));
 				}
 			}
 		});
