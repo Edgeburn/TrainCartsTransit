@@ -1,6 +1,7 @@
 package com.edgeburnmedia.traincartstransit.managers;
 
 import com.edgeburnmedia.traincartstransit.TrainCartsTransit;
+import com.edgeburnmedia.traincartstransit.stop.StopDisplayName;
 import com.edgeburnmedia.traincartstransit.stop.StopInfo;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -9,6 +10,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 public class StopInfoManager {
@@ -61,12 +64,12 @@ public class StopInfoManager {
 		return getStopInfo(destination).getSoundId();
 	}
 
-	public String getDisplayName(String destination) {
+	public StopDisplayName getDisplayName(String destination) {
 		StopInfo stop = getStopInfo(destination);
 		if (stop != null) {
 			return stop.getNextStopDisplayName();
 		} else {
-			return "Unknown";
+			return StopDisplayName.unknownStop();
 		}
 	}
 
@@ -92,7 +95,17 @@ public class StopInfoManager {
 		keys.forEach(s -> {
 			StopInfo stopInfo = new StopInfo();
 			stopInfo.setDestinationName(s);
-			stopInfo.setNextStopDisplayName(fileConfiguration.getString(s + ".displayname"));
+			List<String> displayName = fileConfiguration.getStringList(s + ".displayname");
+			if (displayName.size() != 0) {
+				stopInfo.setNextStopDisplayName(displayName);
+			} else {
+				String legacyDisplayName = fileConfiguration.getString(s + ".displayname"); // support display name as a single string rather than a list
+				if (legacyDisplayName != null) {
+					stopInfo.setNextStopDisplayName(Collections.singletonList(legacyDisplayName));
+				} else {
+					stopInfo.setNextStopDisplayName(StopDisplayName.unknownStop());
+				}
+			}
 			stopInfo.setSoundId(fileConfiguration.getString(s + ".sound"));
 			registerStop(stopInfo);
 		});

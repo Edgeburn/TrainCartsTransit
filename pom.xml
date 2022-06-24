@@ -5,7 +5,7 @@
 
     <groupId>com.edgeburnmedia</groupId>
     <artifactId>TrainCartsTransit</artifactId>
-    <version>1.1.6</version>
+    <version>1.2</version>
     <packaging>jar</packaging>
 
     <name>TrainCartsTransit</name>

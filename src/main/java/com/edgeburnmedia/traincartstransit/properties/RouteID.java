@@ -8,7 +8,6 @@ import com.bergerkiller.bukkit.tc.Util;
 import com.bergerkiller.bukkit.tc.properties.TrainProperties;
 import com.bergerkiller.bukkit.tc.properties.api.ITrainProperty;
 import com.edgeburnmedia.traincartstransit.TrainCartsTransit;
-import com.edgeburnmedia.traincartstransit.stop.StopInfo;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -157,25 +156,6 @@ public class RouteID implements ITrainProperty<String>, CommandExecutor, TabComp
 					return true;
 				} else {
 					sender.sendMessage(ChatColor.YELLOW + "Usage: /trt setroutesound <routeid> <soundid>");
-				}
-				break;
-			case "stop":
-				if (args.length >= 4) {
-					StopInfo stopInfo = new StopInfo();
-					String destination = args[1];
-					String sound = args[2];
-					stopInfo.setDestinationName(destination);
-					stopInfo.setSoundId(sound);
-					StringBuilder builder = new StringBuilder();
-					for (int i = 3; i < args.length; i++) {
-						builder.append(args[i] + " ");
-					}
-					stopInfo.setNextStopDisplayName(builder.toString());
-					plugin.getStopInfoManager().registerStop(stopInfo);
-					plugin.getStopInfoManager().saveStopEntry(stopInfo);
-					return true;
-				} else {
-					sender.sendMessage(ChatColor.YELLOW + "Usage: /trt stop <destination> <sound> <displayname>");
 				}
 				break;
 			default:

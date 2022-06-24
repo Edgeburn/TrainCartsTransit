@@ -39,16 +39,14 @@ public class SignActionStop extends SignAction {
 	 */
 	@Override
 	public void execute(SignActionEvent info) {
-		// TODO: Implement
-		/**
+		/*
 		 * On a train entering the station, the train will stop if there is a player nearby, or if the train has the
 		 * bell rung flag set by a passenger left-clicking the air. It would also reset the bell flag of the train.
 		 * It would also play the announcement sound of the train's route.
 		 *
 		 * On a train leaving the station, the train will then play the next station's announcement sound.
-		 *
 		 */
-		MinecartGroup group = info.getGroup();
+		MinecartGroup train = info.getGroup();
 
 		// on train entering...
 		if (info.getAction().equals(SignActionType.GROUP_ENTER)) {
@@ -64,9 +62,12 @@ public class SignActionStop extends SignAction {
 				its momentum */
 			}
 		} else if (info.getAction().equals(SignActionType.GROUP_LEAVE)) {
-			String sound = TrtUtils.getNextStopSound(plugin, group);
+			String sound = TrtUtils.getNextStopSound(plugin, train);
 			TrtUtils.runOnAllPassengers(info, player -> {
 				plugin.getTransitTonesPlayer().playNextStopTone(player, sound);
+				if (TrtUtils.isNextStopLastStop(train)) {
+					TrtUtils.displayLastStopTitle(plugin, train);
+				}
 			});
 		}
 	}

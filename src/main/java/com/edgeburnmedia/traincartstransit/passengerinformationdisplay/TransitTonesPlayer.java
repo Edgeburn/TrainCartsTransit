@@ -18,6 +18,16 @@ public class TransitTonesPlayer {
 	}
 
 	/**
+	 * Plays the request stop tone for the player. This is used when the player requests to stop at a stop.
+	 * Note that this method does not actually set the flag for the player to stop at a stop, it just plays the tone.
+	 *
+	 * @param player The player to play the sound for.
+	 */
+	public static void playBellRungTone(Player player) {
+		player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, Float.MAX_VALUE, (float) Math.pow(2, -1.0 / 12.0));
+	}
+
+	/**
 	 * Plays the next stop tone for the player, and then plays the sound for the announcement of the next stop.
 	 *
 	 * @param player    The player to play the sound for.
@@ -69,15 +79,5 @@ public class TransitTonesPlayer {
 				}.runTaskLater(pl, 4);
 			}
 		}.runTask(pl);
-	}
-
-	/**
-	 * Plays the request stop tone for the player. This is used when the player requests to stop at a stop.
-	 * Note that this method does not actually set the flag for the player to stop at a stop, it just plays the tone.
-	 *
-	 * @param player The player to play the sound for.
-	 */
-	public void playBellRungTone(Player player) {
-		player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, Float.MAX_VALUE, (float) Math.pow(2, -1.0 / 12.0));
 	}
 }

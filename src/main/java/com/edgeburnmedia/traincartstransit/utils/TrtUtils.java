@@ -6,6 +6,8 @@ import com.bergerkiller.bukkit.tc.controller.MinecartMemberStore;
 import com.bergerkiller.bukkit.tc.events.SignActionEvent;
 import com.bergerkiller.bukkit.tc.properties.TrainProperties;
 import com.edgeburnmedia.traincartstransit.TrainCartsTransit;
+import com.edgeburnmedia.traincartstransit.passengerinformationdisplay.TransitTonesPlayer;
+import com.edgeburnmedia.traincartstransit.stop.StopDisplayName;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -25,10 +27,24 @@ public final class TrtUtils {
 		MinecartMember<?> member = MinecartMemberStore.getFromEntity(vehicle);
 		MinecartGroup train = member.getGroup();
 		train.getProperties().set(plugin.getBellRungTrainProperty(), true);
-		String nextStopDisplayName = TrtUtils.getNextStopDisplayName(plugin, train);
-		TrtUtils.runOnAllPassengers(train, player1 -> {
-			player.sendTitle(ChatColor.GOLD + "STOP REQUESTED", ChatColor.GOLD + "Stopping at " + nextStopDisplayName, 20, 70, 20);
-			plugin.getTransitTonesPlayer().playBellRungTone(player);
+		TransitTonesPlayer.playBellRungTone(player);
+		displayStopRequestTitle(plugin, player);
+	}
+
+	public static void displayStopRequestTitle(TrainCartsTransit plugin, Player player) {
+		Entity vehicle = player.getVehicle();
+		MinecartMember<?> member = MinecartMemberStore.getFromEntity(vehicle);
+		MinecartGroup train = member.getGroup();
+		StopDisplayName nextStopDisplayName = TrtUtils.getNextStopDisplayName(plugin, train);
+		TrtUtils.runOnAllPassengers(train, p -> {
+			p.sendTitle(ChatColor.GOLD + "STOP REQUESTED", ChatColor.GOLD + "Stopping at " + nextStopDisplayName, 20, 70, 20);
+		});
+	}
+
+	public static void displayLastStopTitle(TrainCartsTransit plugin, MinecartGroup train) {
+		StopDisplayName nextStopDisplayName = TrtUtils.getNextStopDisplayName(plugin, train);
+		TrtUtils.runOnAllPassengers(train, player -> {
+			player.sendTitle(ChatColor.RED + "LAST STOP", ChatColor.GOLD + "The last stop is " + nextStopDisplayName, 20, 70, 20);
 		});
 	}
 
@@ -125,7 +141,7 @@ public final class TrtUtils {
 		return lastStop.equals(nextStop);
 	}
 
-	public static String getNextStopDisplayName(TrainCartsTransit pl, MinecartGroup train) {
+	public static StopDisplayName getNextStopDisplayName(TrainCartsTransit pl, MinecartGroup train) {
 		String destID = train.getProperties().getDestination();
 		String stopDisplay = "Unknown";
 		if (destID.isBlank()) { // if this is blank, the train may not have a route, but just a destination
@@ -140,7 +156,7 @@ public final class TrtUtils {
 		if (!destID.equalsIgnoreCase("Unknown")) {
 			return pl.getStopInfoManager().getDisplayName(destID);
 		} else {
-			return "Unknown";
+			return StopDisplayName.unknownStop();
 		}
 	}
 

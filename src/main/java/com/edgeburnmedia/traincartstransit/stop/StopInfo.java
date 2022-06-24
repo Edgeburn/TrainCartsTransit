@@ -1,12 +1,14 @@
 package com.edgeburnmedia.traincartstransit.stop;
 
+import java.util.List;
+
 public class StopInfo {
 	/**
 	 * The TrainCarts "destination" property
 	 */
 	private String destinationName;
 	private String soundId;
-	private String nextStopDisplayName;
+	private StopDisplayName nextStopDisplayName;
 
 	public String getDestinationName() {
 		return destinationName;
@@ -24,11 +26,22 @@ public class StopInfo {
 		this.soundId = soundId;
 	}
 
-	public String getNextStopDisplayName() {
+	public StopDisplayName getNextStopDisplayName() {
 		return nextStopDisplayName;
 	}
 
-	public void setNextStopDisplayName(String nextStopDisplayName) {
+	/**
+	 * Set the next stop display name. This is the text that will be displayed in the next stop info bar.
+	 *
+	 * @param nextStopDisplayName The list of Strings to display.
+	 */
+	public void setNextStopDisplayName(List<String> nextStopDisplayName) {
+		StopDisplayName stopDisplayName = new StopDisplayName();
+		stopDisplayName.addAll(nextStopDisplayName);
+		setNextStopDisplayName(stopDisplayName);
+	}
+
+	public void setNextStopDisplayName(StopDisplayName nextStopDisplayName) {
 		this.nextStopDisplayName = nextStopDisplayName;
 	}
 }

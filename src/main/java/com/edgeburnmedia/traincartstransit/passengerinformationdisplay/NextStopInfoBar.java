@@ -4,6 +4,7 @@ import com.bergerkiller.bukkit.tc.controller.MinecartGroup;
 import com.bergerkiller.bukkit.tc.controller.MinecartMember;
 import com.bergerkiller.bukkit.tc.controller.MinecartMemberStore;
 import com.edgeburnmedia.traincartstransit.TrainCartsTransit;
+import com.edgeburnmedia.traincartstransit.stop.StopDisplayName;
 import com.edgeburnmedia.traincartstransit.utils.TrtUtils;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
@@ -12,11 +13,21 @@ import org.bukkit.entity.Entity;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class NextStopInfoBar extends BukkitRunnable {
+	public static final String LAST_STOP = "" + ChatColor.RED + ChatColor.BOLD + "LAST STOP";
 	private static final String TICK_MARK = "✓";
+	private static boolean shouldTickDisplay;
 	private final TrainCartsTransit pl;
 
 	public NextStopInfoBar(TrainCartsTransit pl) {
 		this.pl = pl;
+	}
+
+	public static boolean isShouldTickDisplay() {
+		return shouldTickDisplay;
+	}
+
+	public static void setShouldTickDisplay(boolean shouldTickDisplay) {
+		NextStopInfoBar.shouldTickDisplay = shouldTickDisplay;
 	}
 
 	/**
@@ -25,22 +36,13 @@ public class NextStopInfoBar extends BukkitRunnable {
 	 *
 	 * @param train the train to check
 	 * @return the check mark symbol if the train is stopping at the next stop.
-	 *         Otherwise, returns an empty string.
+	 * Otherwise, returns an empty string.
 	 */
 	private String checkMarkSymbolIfStopping(MinecartGroup train) {
 		boolean bellRung = train.getProperties().get(pl.getBellRungTrainProperty());
 
 		if (bellRung) {
 			return " " + ChatColor.GOLD + ChatColor.BOLD + TICK_MARK;
-		} else {
-			return "";
-		}
-	}
-
-	private String lastStopTextIfLastStop(MinecartGroup train) {
-		final boolean isLastStop = TrtUtils.isNextStopLastStop(train);
-		if (isLastStop) {
-			return " " + ChatColor.RED + ChatColor.BOLD + "LAST STOP";
 		} else {
 			return "";
 		}
@@ -65,10 +67,14 @@ public class NextStopInfoBar extends BukkitRunnable {
 			if (member != null) {
 				MinecartGroup train = member.getGroup();
 				if (train != null) {
-					String stopName = TrtUtils.getNextStopDisplayName(pl, train);
+					StopDisplayName stopDisplayName = new StopDisplayName(TrtUtils.getNextStopDisplayName(pl, train));
+					if (TrtUtils.isNextStopLastStop(train)) {
+						stopDisplayName.setAsLastStop();
+					}
+					String currentDisplay = stopDisplayName.getTicked();
 					player.spigot().sendMessage(ChatMessageType.ACTION_BAR,
 							TextComponent.fromLegacyText(
-									ChatColor.GOLD + stopName + ChatColor.RESET + lastStopTextIfLastStop(train)
+									ChatColor.GOLD + currentDisplay + ChatColor.RESET
 											+ checkMarkSymbolIfStopping(train)));
 				}
 			}
