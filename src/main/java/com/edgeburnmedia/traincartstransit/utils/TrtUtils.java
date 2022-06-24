@@ -6,6 +6,7 @@ import com.bergerkiller.bukkit.tc.controller.MinecartMemberStore;
 import com.bergerkiller.bukkit.tc.events.SignActionEvent;
 import com.bergerkiller.bukkit.tc.properties.TrainProperties;
 import com.edgeburnmedia.traincartstransit.TrainCartsTransit;
+import com.edgeburnmedia.traincartstransit.passengerinformationdisplay.TransitTonesPlayer;
 import com.edgeburnmedia.traincartstransit.stop.StopDisplayName;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -26,6 +27,7 @@ public final class TrtUtils {
 		MinecartMember<?> member = MinecartMemberStore.getFromEntity(vehicle);
 		MinecartGroup train = member.getGroup();
 		train.getProperties().set(plugin.getBellRungTrainProperty(), true);
+		TransitTonesPlayer.playBellRungTone(player);
 		displayStopRequestTitle(plugin, player);
 	}
 
