@@ -10,9 +10,7 @@ import com.edgeburnmedia.traincartstransit.properties.BellRung;
 import com.edgeburnmedia.traincartstransit.properties.RouteID;
 import com.edgeburnmedia.traincartstransit.properties.SignActionBellRing;
 import com.edgeburnmedia.traincartstransit.stop.SignActionStop;
-import com.edgeburnmedia.traincartstransit.stop.StopDisplayName;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 public final class TrainCartsTransit extends JavaPlugin {
 	private final SignActionStop signActionStop = new SignActionStop(this);
@@ -72,12 +70,6 @@ public final class TrainCartsTransit extends JavaPlugin {
 		stopInfoManager.readConfigFile();
 
 		infoBar.runTaskTimer(this, 1, 1);
-		new BukkitRunnable() {
-			@Override
-			public void run() {
-				StopDisplayName.setShouldTick(true);
-			}
-		}.runTaskTimer(this, 20, 40);
 	}
 
 	public RouteID getRouteID() {

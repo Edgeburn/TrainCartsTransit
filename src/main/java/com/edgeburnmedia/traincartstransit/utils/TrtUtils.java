@@ -26,10 +26,23 @@ public final class TrtUtils {
 		MinecartMember<?> member = MinecartMemberStore.getFromEntity(vehicle);
 		MinecartGroup train = member.getGroup();
 		train.getProperties().set(plugin.getBellRungTrainProperty(), true);
+		displayStopRequestTitle(plugin, player);
+	}
+
+	public static void displayStopRequestTitle(TrainCartsTransit plugin, Player player) {
+		Entity vehicle = player.getVehicle();
+		MinecartMember<?> member = MinecartMemberStore.getFromEntity(vehicle);
+		MinecartGroup train = member.getGroup();
 		StopDisplayName nextStopDisplayName = TrtUtils.getNextStopDisplayName(plugin, train);
-		TrtUtils.runOnAllPassengers(train, player1 -> {
-			player.sendTitle(ChatColor.GOLD + "STOP REQUESTED", ChatColor.GOLD + "Stopping at " + nextStopDisplayName, 20, 70, 20);
-			plugin.getTransitTonesPlayer().playBellRungTone(player);
+		TrtUtils.runOnAllPassengers(train, p -> {
+			p.sendTitle(ChatColor.GOLD + "STOP REQUESTED", ChatColor.GOLD + "Stopping at " + nextStopDisplayName, 20, 70, 20);
+		});
+	}
+
+	public static void displayLastStopTitle(TrainCartsTransit plugin, MinecartGroup train) {
+		StopDisplayName nextStopDisplayName = TrtUtils.getNextStopDisplayName(plugin, train);
+		TrtUtils.runOnAllPassengers(train, player -> {
+			player.sendTitle(ChatColor.RED + "LAST STOP", ChatColor.GOLD + "The last stop is " + nextStopDisplayName, 20, 70, 20);
 		});
 	}
 

@@ -6,7 +6,6 @@ import com.edgeburnmedia.traincartstransit.utils.RevolvingArrayList;
 import java.util.Collection;
 
 public class StopDisplayName extends RevolvingArrayList<String> {
-	private static boolean shouldTick;
 
 	public StopDisplayName(Collection<? extends String> c) {
 		super(c);
@@ -16,12 +15,14 @@ public class StopDisplayName extends RevolvingArrayList<String> {
 		super();
 	}
 
-	public static boolean isShouldTick() {
-		return shouldTick;
-	}
-
-	public static void setShouldTick(boolean shouldTick) {
-		StopDisplayName.shouldTick = shouldTick;
+	private static boolean shouldTickDisplay() {
+		long m = System.currentTimeMillis();
+		long s = m / 1000;
+		if (s % 2 == 0) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public static StopDisplayName unknownStop() {
@@ -37,10 +38,6 @@ public class StopDisplayName extends RevolvingArrayList<String> {
 		add(NextStopInfoBar.LAST_STOP);
 	}
 
-	@Override
-	public StopDisplayName clone() {
-		return (StopDisplayName) super.clone();
-	}
 
 	@Override
 	public String toString() {
@@ -53,9 +50,8 @@ public class StopDisplayName extends RevolvingArrayList<String> {
 	 *
 	 * @return The currently ticked element.
 	 */
-	public String getTicked() { // TODO: this doesn't work
-		if (isShouldTick()) {
-			setShouldTick(false);
+	public String getTicked() {
+		if (shouldTickDisplay()) {
 			return next();
 		} else {
 			return get(getCurrentIndex());
