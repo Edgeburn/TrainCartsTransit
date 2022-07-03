@@ -20,8 +20,19 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
+/**
+ * Utility methods for Train Carts Transit.
+ *
+ * @author Edgebun Media
+ */
 public final class TrtUtils {
 
+	/**
+	 * Ring the bell of a train.
+	 *
+	 * @param plugin Plugin instance
+	 * @param player Ring the bell of this player's train.
+	 */
 	public static void ringBellOfPlayerTrain(TrainCartsTransit plugin, Player player) {
 		Entity vehicle = player.getVehicle();
 		MinecartMember<?> member = MinecartMemberStore.getFromEntity(vehicle);
@@ -31,6 +42,12 @@ public final class TrtUtils {
 		displayStopRequestTitle(plugin, player);
 	}
 
+	/**
+	 * Displays a title to the player indicating that they have requested a stop.
+	 *
+	 * @param plugin Plugin instance
+	 * @param player Player who rung the bell
+	 */
 	public static void displayStopRequestTitle(TrainCartsTransit plugin, Player player) {
 		Entity vehicle = player.getVehicle();
 		MinecartMember<?> member = MinecartMemberStore.getFromEntity(vehicle);
@@ -41,6 +58,12 @@ public final class TrtUtils {
 		});
 	}
 
+	/**
+	 * Display a message to all passengers of a train indicating that the next stop is the last stop.
+	 *
+	 * @param plugin Plugin instance
+	 * @param train  Train whose passengers should be notified
+	 */
 	public static void displayLastStopTitle(TrainCartsTransit plugin, MinecartGroup train) {
 		StopDisplayName nextStopDisplayName = TrtUtils.getNextStopDisplayName(plugin, train);
 		TrtUtils.runOnAllPassengers(train, player -> {
@@ -100,10 +123,23 @@ public final class TrtUtils {
 		return arePlayersInRange(block.getLocation(), range, ignored);
 	}
 
+	/**
+	 * Convenience method for running a {@link Consumer} on all passengers of a {@link MinecartGroup} directly
+	 * from a {@link SignActionEvent}.
+	 *
+	 * @param e {@link SignActionEvent} to get the {@link MinecartGroup} from
+	 * @param f {@link Consumer} to run on all passengers
+	 */
 	public static void runOnAllPassengers(SignActionEvent e, Consumer<Player> f) {
 		runOnAllPassengers(e.getGroup(), f);
 	}
 
+	/**
+	 * Runs a function on all passengers of a {@link MinecartGroup}
+	 *
+	 * @param train {@link MinecartGroup} to run the function on
+	 * @param f     Function to run
+	 */
 	public static void runOnAllPassengers(MinecartGroup train, Consumer<Player> f) {
 		train.forEach(minecartMember -> {
 			minecartMember.getEntity().getPlayerPassengers().forEach(player -> {
@@ -112,6 +148,12 @@ public final class TrtUtils {
 		});
 	}
 
+	/**
+	 * Get the destination name of the last stop of a train.
+	 *
+	 * @param train The train to get the destination name of.
+	 * @return The destination name of the last stop of the train.
+	 */
 	public static String getLastStop(MinecartGroup train) {
 		TrainProperties properties = train.getProperties();
 		List<String> stops = new ArrayList<>(properties.getDestinationRoute());
@@ -128,10 +170,23 @@ public final class TrtUtils {
 		return stops.get(lastStopId);
 	}
 
+	/**
+	 * Determine whether a given stop is the last stop for a train.
+	 *
+	 * @param train    The train to check.
+	 * @param stopName The stop to check.
+	 * @return True if the stop is the last stop, False if not.
+	 */
 	public static boolean isLastStop(MinecartGroup train, String stopName) {
 		return getLastStop(train).equals(stopName);
 	}
 
+	/**
+	 * Determine whether the train's next stop is last stop.
+	 *
+	 * @param train The train to check.
+	 * @return True if the train's next stop is the last stop, False if not.
+	 */
 	public static boolean isNextStopLastStop(MinecartGroup train) {
 		String lastStop = getLastStop(train);
 		String nextStop = train.getProperties().getDestination();
@@ -141,6 +196,13 @@ public final class TrtUtils {
 		return lastStop.equals(nextStop);
 	}
 
+	/**
+	 * Gets the {@link StopDisplayName} of the next stop on a train's route.
+	 *
+	 * @param pl    Plugin instance
+	 * @param train Train to get the next stop of
+	 * @return The next stop's {@link StopDisplayName}
+	 */
 	public static StopDisplayName getNextStopDisplayName(TrainCartsTransit pl, MinecartGroup train) {
 		String destID = train.getProperties().getDestination();
 		String stopDisplay = "Unknown";
@@ -160,6 +222,13 @@ public final class TrtUtils {
 		}
 	}
 
+	/**
+	 * Gets the sound name to play for the next stop on a train's route
+	 *
+	 * @param pl    Plugin instance
+	 * @param train Train to get the next stop for
+	 * @return Sound name to play
+	 */
 	public static String getNextStopSound(TrainCartsTransit pl, MinecartGroup train) {
 		String destID = train.getProperties().getDestination();
 		String sound = null;
@@ -180,4 +249,19 @@ public final class TrtUtils {
 	}
 
 
+	/**
+	 * Announce the next stop of the train to all players riding the train
+	 *
+	 * @param plugin Plugin instance
+	 * @param train  Train to announce
+	 */
+	public static void announceNextStop(TrainCartsTransit plugin, MinecartGroup train) {
+		String sound = getNextStopSound(plugin, train);
+		runOnAllPassengers(train, player -> {
+			plugin.getTransitTonesPlayer().playNextStopTone(player, sound);
+			if (isNextStopLastStop(train)) {
+				displayLastStopTitle(plugin, train);
+			}
+		});
+	}
 }

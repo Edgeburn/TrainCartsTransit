@@ -62,13 +62,7 @@ public class SignActionStop extends SignAction {
 				its momentum */
 			}
 		} else if (info.getAction().equals(SignActionType.GROUP_LEAVE)) {
-			String sound = TrtUtils.getNextStopSound(plugin, train);
-			TrtUtils.runOnAllPassengers(info, player -> {
-				plugin.getTransitTonesPlayer().playNextStopTone(player, sound);
-				if (TrtUtils.isNextStopLastStop(train)) {
-					TrtUtils.displayLastStopTitle(plugin, train);
-				}
-			});
+			TrtUtils.announceNextStop(plugin, train);
 		}
 	}
 
