@@ -1,4 +1,4 @@
-package com.edgeburnmedia.traincartstransit.properties;
+package com.edgeburnmedia.traincartstransit.signaction;
 
 import com.bergerkiller.bukkit.tc.events.SignActionEvent;
 import com.bergerkiller.bukkit.tc.events.SignChangeActionEvent;
@@ -7,28 +7,30 @@ import com.bergerkiller.bukkit.tc.signactions.SignActionType;
 import com.bergerkiller.bukkit.tc.utils.SignBuildOptions;
 import com.edgeburnmedia.traincartstransit.TrainCartsTransit;
 
-public class SignActionBellRing extends SignAction {
+import static com.edgeburnmedia.traincartstransit.utils.TrtUtils.announceNextStop;
+
+public class SignActionAnnouncement extends SignAction {
 	private final TrainCartsTransit plugin;
 
-	public SignActionBellRing(TrainCartsTransit plugin) {
+	public SignActionAnnouncement(TrainCartsTransit plugin) {
 		this.plugin = plugin;
 	}
 
 	@Override
 	public boolean match(SignActionEvent info) {
-		return info.isTrainSign() && info.getLine(1).equalsIgnoreCase("bell");
+		return info.isType("announcement") && info.isTrainSign();
 	}
 
 	@Override
 	public void execute(SignActionEvent info) {
-		if (info.getAction().equals(SignActionType.GROUP_ENTER)) {
-			info.getGroup().getProperties().set(plugin.getBellRungTrainProperty(), true);
+		if (info.getAction().equals(SignActionType.GROUP_LEAVE)) {
+			announceNextStop(plugin, info.getGroup());
 		}
 	}
 
 	@Override
 	public boolean build(SignChangeActionEvent event) {
-		return SignBuildOptions.create().setName("Stop Request Sign").setDescription("rings the request stop bell on the train to make the train stop at the next stop")
+		return SignBuildOptions.create().setName("Announcement Sign").setDescription("announce the train's next stop")
 				.handle(event.getPlayer());
 	}
 }

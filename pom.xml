@@ -5,7 +5,7 @@
 
     <groupId>com.edgeburnmedia</groupId>
     <artifactId>TrainCartsTransit</artifactId>
-    <version>1.2</version>
+    <version>1.3</version>
     <packaging>jar</packaging>
 
     <name>TrainCartsTransit</name>
@@ -13,8 +13,8 @@
     <properties>
         <java.version>17</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.bkcversion>1.19-v1-SNAPSHOT</project.bkcversion>
-        <project.tcversion>1.19-v1-SNAPSHOT</project.tcversion>
+        <project.bkcversion>1.19-v2-SNAPSHOT</project.bkcversion>
+        <project.tcversion>1.19-v3-SNAPSHOT</project.tcversion>
     </properties>
 
     <build>
