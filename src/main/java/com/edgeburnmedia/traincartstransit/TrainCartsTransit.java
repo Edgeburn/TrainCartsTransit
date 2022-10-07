@@ -22,6 +22,7 @@ public final class TrainCartsTransit extends JavaPlugin {
 	private NextStopInfoBar infoBar = new NextStopInfoBar(this);
 
 	private StopInfoManager stopInfoManager = new StopInfoManager(this);
+	private TrainCarts trainCartsPlugin;
 
 	public StopInfoManager getStopInfoManager() {
 		return stopInfoManager;
@@ -57,8 +58,10 @@ public final class TrainCartsTransit extends JavaPlugin {
 		getLogger().info("Registered SignActionBellRing");
 		routeID = new RouteID(this);
 		bellRungTrainProperty = new BellRung();
-		getPlugin(TrainCarts.class).getPropertyRegistry().register(routeID);
-		getPlugin(TrainCarts.class).getPropertyRegistry().register(bellRungTrainProperty);
+		trainCartsPlugin = TrainCarts.plugin;
+
+		trainCartsPlugin.getPropertyRegistry().register(routeID);
+		trainCartsPlugin.getPropertyRegistry().register(bellRungTrainProperty);
 
 		getServer().getPluginCommand("trtdebug").setExecutor(new DebugCommands(this));
 		getServer().getPluginCommand("traincartstransit").setExecutor(routeID);
@@ -70,6 +73,10 @@ public final class TrainCartsTransit extends JavaPlugin {
 		stopInfoManager.readConfigFile();
 
 		infoBar.runTaskTimer(this, 1, 1);
+	}
+
+	public TrainCarts getTrainCartsPlugin() {
+		return trainCartsPlugin;
 	}
 
 	public RouteID getRouteID() {
