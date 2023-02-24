@@ -34,7 +34,7 @@ repositories {
 dependencies {
     implementation 'org.jetbrains:annotations-java5:24.0.0'
     implementation 'cloud.commandframework:cloud-minecraft-extras:1.8.1'
-    implementation 'cloud.commandframework:cloud-annotations:1.8.0'
+    implementation 'cloud.commandframework:cloud-annotations:1.8.1'
     implementation 'com.github.BlueMap-Minecraft:BlueMapAPI:2.5.0'
     compileOnly 'org.spigotmc:spigot-api:1.19.3-R0.1-SNAPSHOT'
     compileOnly 'com.bergerkiller.bukkit:BKCommonLib:1.19.3-v3-SNAPSHOT'
