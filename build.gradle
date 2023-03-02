@@ -32,7 +32,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.jetbrains:annotations-java5:24.0.0'
+    implementation 'org.jetbrains:annotations-java5:24.0.1'
     implementation 'cloud.commandframework:cloud-minecraft-extras:1.8.1'
     implementation 'cloud.commandframework:cloud-annotations:1.8.1'
     implementation 'com.github.BlueMap-Minecraft:BlueMapAPI:2.5.0'
