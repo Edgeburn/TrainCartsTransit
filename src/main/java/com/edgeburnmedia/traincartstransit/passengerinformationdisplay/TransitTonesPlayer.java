@@ -34,6 +34,9 @@ public class TransitTonesPlayer {
 	 * @param stopSound The sound to play for the announcement of the next stop.
 	 */
 	public void playNextStopTone(Player player, String stopSound) {
+
+		final float volume = 99999f;
+
 		new BukkitRunnable() {
 			/**
 			 * When an object implementing interface {@code Runnable} is used
@@ -48,9 +51,9 @@ public class TransitTonesPlayer {
 			 */
 			@Override
 			public void run() {
-				// using Float.MAX_VALUE here so that when the sound is played as the train is moving, it doesn't
+				// using 99999 here so that when the sound is played as the train is moving, it doesn't
 				// become impossible to hear
-				player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_IRON_XYLOPHONE, Float.MAX_VALUE, 0.0f);
+				player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_IRON_XYLOPHONE, volume, 0.0f);
 				new BukkitRunnable() {
 
 					/**
@@ -66,12 +69,12 @@ public class TransitTonesPlayer {
 					 */
 					@Override
 					public void run() {
-						player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_IRON_XYLOPHONE, Float.MAX_VALUE, (float) Math.pow(2, -7.0 / 12.0));
+						player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_IRON_XYLOPHONE, volume, (float) Math.pow(2, -7.0 / 12.0));
 						if (stopSound != null) {
 							new BukkitRunnable() {
 								@Override
 								public void run() {
-									player.playSound(player.getLocation(), stopSound, Float.MAX_VALUE, 1.0f);
+									player.playSound(player.getLocation(), stopSound, volume, 1.0f);
 								}
 							}.runTaskLater(pl, 6);
 						}

@@ -1,5 +1,5 @@
 name: TrainCartsTransit
-version: '${project.version}'
+version: '${version}'
 main: com.edgeburnmedia.traincartstransit.TrainCartsTransit
 api-version: 1.18
 depend: [ BKCommonLib, Train_Carts ]
