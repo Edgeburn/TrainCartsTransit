@@ -1,5 +1,7 @@
 package com.edgeburnmedia.traincartstransit.properties;
 
+import static com.edgeburnmedia.traincartstransit.TrainCartsTransit.reloadConfigs;
+
 import cloud.commandframework.annotations.Argument;
 import cloud.commandframework.annotations.CommandDescription;
 import cloud.commandframework.annotations.CommandMethod;
@@ -128,7 +130,7 @@ public class RouteID implements ITrainProperty<String>, CommandExecutor, TabComp
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 		switch (args[0]) {
-			case "setroute":
+			case "setroute" -> {
 				if (args.length == 3) {
 					String trainName = args[1];
 					String newRouteID = args[2];
@@ -136,18 +138,19 @@ public class RouteID implements ITrainProperty<String>, CommandExecutor, TabComp
 					prop.set(this, newRouteID);
 					sendPropertyCommand(sender, trainName);
 				} else {
-					sender.sendMessage(ChatColor.YELLOW + "Usage: /trt setroute <trainname> <routeid>");
+					sender.sendMessage(
+						ChatColor.YELLOW + "Usage: /trt setroute <trainname> <routeid>");
 				}
-				break;
-			case "getroute":
+			}
+			case "getroute" -> {
 				if (args.length == 2) {
 					String trainName = args[1];
 					sendPropertyCommand(sender, trainName);
 				} else {
 					sender.sendMessage(ChatColor.YELLOW + "Usage: /trt getroute <trainname>");
 				}
-				break;
-			case "setroutesound":
+			}
+			case "setroutesound" -> {
 				if (args.length == 3) {
 					String route = args[1];
 					String sound = args[2];
@@ -155,14 +158,29 @@ public class RouteID implements ITrainProperty<String>, CommandExecutor, TabComp
 					plugin.getAnnouncementManager().saveSoundEntry(route, sound);
 					return true;
 				} else {
-					sender.sendMessage(ChatColor.YELLOW + "Usage: /trt setroutesound <routeid> <soundid>");
+					sender.sendMessage(
+						ChatColor.YELLOW + "Usage: /trt setroutesound <routeid> <soundid>");
 				}
-				break;
-			default:
+			}
+			case "reload" -> {
+				try {
+					reloadConfigs();
+					sender.sendMessage(ChatColor.GREEN + "Reloaded config files");
+					return true;
+				} catch (Exception e) {
+					sender.sendMessage(ChatColor.RED + "Error reloading config files: " + e.getMessage());
+					throw e;
+				}
+
+			}
+			default -> {
 				return false;
+			}
 		}
 		return true;
 	}
+
+
 
 	/**
 	 * Requests a list of possible completions for a command argument.
@@ -188,6 +206,7 @@ public class RouteID implements ITrainProperty<String>, CommandExecutor, TabComp
 			commands.add("getroute");
 			commands.add("setroutesound");
 			commands.add("stop");
+			commands.add("reload");
 			StringUtil.copyPartialMatches(args[0], commands, completions);
 		} else if (args.length == 2 && (args[0].equalsIgnoreCase("setroute") || args[0].equalsIgnoreCase("getroute"))) {
 			commands.addAll(getNamesOfExistingTrains());

@@ -4,6 +4,7 @@ import com.edgeburnmedia.traincartstransit.passengerinformationdisplay.NextStopI
 import com.edgeburnmedia.traincartstransit.utils.RevolvingArrayList;
 
 import java.util.Collection;
+import java.util.Collections;
 
 public class StopDisplayName extends RevolvingArrayList<String> {
 
@@ -13,6 +14,10 @@ public class StopDisplayName extends RevolvingArrayList<String> {
 
 	public StopDisplayName() {
 		super();
+	}
+
+	public StopDisplayName(String destination) {
+		this(Collections.singletonList(destination));
 	}
 
 	private static boolean shouldTickDisplay() {

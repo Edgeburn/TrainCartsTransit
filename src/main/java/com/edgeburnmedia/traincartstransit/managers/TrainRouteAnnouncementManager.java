@@ -69,6 +69,12 @@ public class TrainRouteAnnouncementManager {
 	}
 
 	public void readConfigFile() {
+		try {
+			fileConfiguration.load(configFile);
+		} catch (IOException | InvalidConfigurationException e) {
+			throw new RuntimeException(e);
+		}
+		soundsMap.clear();
 		Set<String> keys = fileConfiguration.getKeys(false);
 
 		keys.forEach(s -> {
