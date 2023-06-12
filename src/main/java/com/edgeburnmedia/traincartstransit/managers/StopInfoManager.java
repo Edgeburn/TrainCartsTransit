@@ -69,7 +69,7 @@ public class StopInfoManager {
 		if (stop != null) {
 			return stop.getNextStopDisplayName();
 		} else {
-			return StopDisplayName.unknownStop();
+			return new StopDisplayName(destination);
 		}
 	}
 
@@ -90,6 +90,12 @@ public class StopInfoManager {
 	}
 
 	public void readConfigFile() {
+		try {
+			fileConfiguration.load(configFile);
+		} catch (IOException | InvalidConfigurationException e) {
+			throw new RuntimeException(e);
+		}
+		stops.clear();
 		Set<String> keys = fileConfiguration.getKeys(false);
 
 		keys.forEach(s -> {

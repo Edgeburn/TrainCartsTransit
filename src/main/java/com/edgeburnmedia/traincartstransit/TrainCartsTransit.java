@@ -11,6 +11,7 @@ import com.edgeburnmedia.traincartstransit.properties.RouteID;
 import com.edgeburnmedia.traincartstransit.signaction.SignActionNextStopAlert;
 import com.edgeburnmedia.traincartstransit.signaction.SignActionBellRing;
 import com.edgeburnmedia.traincartstransit.signaction.SignActionStop;
+import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class TrainCartsTransit extends JavaPlugin {
@@ -25,6 +26,11 @@ public final class TrainCartsTransit extends JavaPlugin {
 
 	private StopInfoManager stopInfoManager = new StopInfoManager(this);
 	private TrainCarts trainCartsPlugin;
+	private static TrainCartsTransit instance;
+
+	public static TrainCartsTransit getInstance() {
+		return instance;
+	}
 
 	public StopInfoManager getStopInfoManager() {
 		return stopInfoManager;
@@ -54,6 +60,7 @@ public final class TrainCartsTransit extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
+		instance = this;
 		TrtListeners listeners = new TrtListeners(this);
 		getServer().getPluginManager().registerEvents(listeners, this);
 		SignAction.register(signActionStop);
@@ -73,10 +80,10 @@ public final class TrainCartsTransit extends JavaPlugin {
 		getServer().getPluginCommand("traincartstransit").setExecutor(routeID);
 
 		announcementManager.saveConfigFile();
-		announcementManager.readConfigFile();
 
 		stopInfoManager.saveConfigFile();
-		stopInfoManager.readConfigFile();
+
+		reloadConfigs();
 
 		infoBar.runTaskTimer(this, 1, 1);
 	}
@@ -87,5 +94,15 @@ public final class TrainCartsTransit extends JavaPlugin {
 
 	public RouteID getRouteID() {
 		return routeID;
+	}
+
+	public static void reloadConfigs() {
+		TrainCartsTransit.getInstance().getAnnouncementManager().readConfigFile();
+		TrainCartsTransit.getInstance().getStopInfoManager().readConfigFile();
+		getInstance().getServer().getOperators().forEach(op -> {
+			if (op.isOnline()) {
+				op.getPlayer().sendMessage(ChatColor.GRAY.toString() + ChatColor.ITALIC.toString() + "TrainCartsTransit configs reloaded");
+			}
+		});
 	}
 }
