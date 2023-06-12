@@ -1,4 +1,4 @@
-package com.edgeburnmedia.traincartstransit.properties;
+package com.edgeburnmedia.traincartstransit.signaction;
 
 import com.bergerkiller.bukkit.tc.events.SignActionEvent;
 import com.bergerkiller.bukkit.tc.events.SignChangeActionEvent;
