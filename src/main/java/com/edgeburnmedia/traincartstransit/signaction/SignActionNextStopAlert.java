@@ -9,16 +9,16 @@ import com.edgeburnmedia.traincartstransit.TrainCartsTransit;
 
 import static com.edgeburnmedia.traincartstransit.utils.TrtUtils.announceNextStop;
 
-public class SignActionAnnouncement extends SignAction {
+public class SignActionNextStopAlert extends SignAction {
 	private final TrainCartsTransit plugin;
 
-	public SignActionAnnouncement(TrainCartsTransit plugin) {
+	public SignActionNextStopAlert(TrainCartsTransit plugin) {
 		this.plugin = plugin;
 	}
 
 	@Override
 	public boolean match(SignActionEvent info) {
-		return info.isType("announcement") && info.isTrainSign();
+		return info.isType("nextstopalert") && info.isTrainSign();
 	}
 
 	@Override
@@ -30,7 +30,7 @@ public class SignActionAnnouncement extends SignAction {
 
 	@Override
 	public boolean build(SignChangeActionEvent event) {
-		return SignBuildOptions.create().setName("Announcement Sign").setDescription("announce the train's next stop")
+		return SignBuildOptions.create().setName("Next Stop Alert Sign").setDescription("alert passenger's of the train's next stop")
 				.handle(event.getPlayer());
 	}
 }

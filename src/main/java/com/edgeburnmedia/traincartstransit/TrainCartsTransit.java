@@ -8,7 +8,7 @@ import com.edgeburnmedia.traincartstransit.passengerinformationdisplay.NextStopI
 import com.edgeburnmedia.traincartstransit.passengerinformationdisplay.TransitTonesPlayer;
 import com.edgeburnmedia.traincartstransit.properties.BellRung;
 import com.edgeburnmedia.traincartstransit.properties.RouteID;
-import com.edgeburnmedia.traincartstransit.signaction.SignActionAnnouncement;
+import com.edgeburnmedia.traincartstransit.signaction.SignActionNextStopAlert;
 import com.edgeburnmedia.traincartstransit.signaction.SignActionBellRing;
 import com.edgeburnmedia.traincartstransit.signaction.SignActionStop;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -16,7 +16,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public final class TrainCartsTransit extends JavaPlugin {
 	private final SignActionStop signActionStop = new SignActionStop(this);
 	private final SignActionBellRing signActionBellRing = new SignActionBellRing(this);
-	private final SignActionAnnouncement signActionAnnouncement = new SignActionAnnouncement(this);
+	private final SignActionNextStopAlert signActionNextStopAlert = new SignActionNextStopAlert(this);
 	private final TransitTonesPlayer transitTonesPlayer = new TransitTonesPlayer(this);
 	private final TrainRouteAnnouncementManager announcementManager = new TrainRouteAnnouncementManager(this);
 	private RouteID routeID;
@@ -48,8 +48,8 @@ public final class TrainCartsTransit extends JavaPlugin {
 		getLogger().info("Unregistered SignActionStop");
 		SignAction.unregister(signActionBellRing);
 		getLogger().info("Unregistered SignActionBellRing");
-		SignAction.unregister(signActionAnnouncement);
-		getLogger().info("Unregistered SignActionAnnouncement");
+		SignAction.unregister(signActionNextStopAlert);
+		getLogger().info("Unregistered SignActionNextStopAlert");
 	}
 
 	@Override
@@ -60,8 +60,8 @@ public final class TrainCartsTransit extends JavaPlugin {
 		getLogger().info("Registered SignActionStop");
 		SignAction.register(signActionBellRing);
 		getLogger().info("Registered SignActionBellRing");
-		SignAction.register(signActionAnnouncement);
-		getLogger().info("Registered SignActionAnnouncement");
+		SignAction.register(signActionNextStopAlert);
+		getLogger().info("Registered SignActionNextStopAlert");
 		routeID = new RouteID(this);
 		bellRungTrainProperty = new BellRung();
 		trainCartsPlugin = TrainCarts.plugin;
