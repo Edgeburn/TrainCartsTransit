@@ -42,7 +42,7 @@ dependencies {
 }
 
 group = 'com.edgeburnmedia'
-version = '1.4'
+version = '1.4.1'
 description = 'TrainCartsTransit'
 java.sourceCompatibility = JavaVersion.VERSION_17
 

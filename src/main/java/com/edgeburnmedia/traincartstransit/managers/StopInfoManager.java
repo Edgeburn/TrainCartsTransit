@@ -3,6 +3,7 @@ package com.edgeburnmedia.traincartstransit.managers;
 import com.edgeburnmedia.traincartstransit.TrainCartsTransit;
 import com.edgeburnmedia.traincartstransit.stop.StopDisplayName;
 import com.edgeburnmedia.traincartstransit.stop.StopInfo;
+import java.util.Objects;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import org.jetbrains.annotations.Nullable;
 
 public class StopInfoManager {
 	private final TrainCartsTransit plugin;
@@ -49,7 +51,7 @@ public class StopInfoManager {
 		}
 	}
 
-	public StopInfo getStopInfo(String destination) {
+	public @Nullable StopInfo getStopInfo(String destination) {
 //		Bukkit.broadcastMessage("destination is " + destination);
 		for (StopInfo stopInfo : stops) {
 			if (stopInfo.getDestinationName().equalsIgnoreCase(destination)) {
@@ -61,7 +63,11 @@ public class StopInfoManager {
 	}
 
 	public String getSound(String destination) {
-		return getStopInfo(destination).getSoundId();
+		return Objects.requireNonNullElseGet(getStopInfo(destination), () -> {
+			StopInfo stopInfo = new StopInfo();
+			stopInfo.setDestinationName(destination);
+			return stopInfo;
+		}).getSoundId();
 	}
 
 	public StopDisplayName getDisplayName(String destination) {
