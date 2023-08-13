@@ -94,7 +94,7 @@ public class SignActionStop extends SignAction {
 		});
 
 		Player[] passengers = trainPassengers.toArray(new Player[0]);
-		boolean playersInRange = TrtUtils.arePlayersInRange(e.getLocation(), 5.0, passengers);
+		boolean playersInRange = TrtUtils.arePlayersInRange(e.getLocation(), 5.0);
 		boolean bellRung = e.getGroup().getProperties().get(plugin.getBellRungTrainProperty());
 		e.getGroup().getProperties().set(plugin.getBellRungTrainProperty(), false);
 

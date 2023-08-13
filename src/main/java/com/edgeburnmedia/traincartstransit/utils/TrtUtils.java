@@ -39,7 +39,7 @@ public final class TrtUtils {
 		MinecartMember<?> member = MinecartMemberStore.getFromEntity(vehicle);
 		MinecartGroup train = member.getGroup();
 		train.getProperties().set(plugin.getBellRungTrainProperty(), true);
-		TransitTonesPlayer.playBellRungTone(player);
+		TrtUtils.runOnAllPassengers(train, TransitTonesPlayer::playBellRungTone);
 		displayStopRequestTitle(plugin, player);
 	}
 
@@ -79,13 +79,9 @@ public final class TrtUtils {
 	 * @param range    Radius to check
 	 * @return True if players exist, False if not
 	 */
-	public static boolean arePlayersInRange(Location location, double range, Player... ignored) {
+	public static boolean arePlayersInRange(Location location, double range) {
 		// FIXME: trains will not stop if a player is waiting at a stop if there are players riding the train
 		Collection<Entity> nearbyEntities;
-		List<UUID> ignoredPlayerUUIDS = new ArrayList<>();
-		for (int i = 0; i < ignored.length; i++) {
-			ignoredPlayerUUIDS.add(ignored[i].getUniqueId());
-		}
 		try {
 			nearbyEntities = location.getWorld().getNearbyEntities(location, range, range, range);
 		} catch (NullPointerException e) {
@@ -95,8 +91,8 @@ public final class TrtUtils {
 			return false;
 		}
 		for (Entity entity : nearbyEntities) {
-			if (entity instanceof Player) {
-				if (!doesListContain(ignoredPlayerUUIDS, entity.getUniqueId())) {
+			if (entity instanceof Player player) {
+				if (player.getVehicle() == null) {
 					return true;
 				}
 			}
@@ -111,17 +107,6 @@ public final class TrtUtils {
 			}
 		}
 		return false;
-	}
-
-	/**
-	 * Checks whether players exist within a certain radius of a {@link Block}'s {@link Location}
-	 *
-	 * @param block Location to check
-	 * @param range Radius to check
-	 * @return True if players exist, False if not
-	 */
-	public static boolean arePlayersInRange(Block block, double range, Player... ignored) {
-		return arePlayersInRange(block.getLocation(), range, ignored);
 	}
 
 	/**
